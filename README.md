@@ -1,7 +1,14 @@
-# sapper-template
+# Minecraft VoiceChat Web Implementation
 
-The default [Sapper](https://github.com/sveltejs/sapper) template, available for Rollup and webpack.
+This is the web implementation of the associated Spigot voice chat system (Link in progress). 
 
+This app is made with Sapper, Socket.IO and WebRTC using Web Audio API.
+
+## Acknowledgments
+[WebRTC group chat example](https://github.com/anoek/webrtc-group-chat-example) Thanks for this very helpful example for multi-party communication using WebRTC.
+
+
+## This project uses the [Sapper](https://github.com/sveltejs/sapper) Webpack template
 
 ## Getting started
 
@@ -11,8 +18,6 @@ The default [Sapper](https://github.com/sveltejs/sapper) template, available for
 [`degit`](https://github.com/Rich-Harris/degit) is a scaffolding tool that lets you create a directory from a branch in a repository. Use either the `rollup` or `webpack` branch in `sapper-template`:
 
 ```bash
-# for Rollup
-npx degit "sveltejs/sapper-template#rollup" my-app
 # for webpack
 npx degit "sveltejs/sapper-template#webpack" my-app
 ```
@@ -104,8 +109,3 @@ Because of that, it's essential that the bundler doesn't treat the package as an
 ```bash
 npm install -D @sveltejs/svelte-virtual-list
 ```
-
-
-## Bugs and feedback
-
-Sapper is in early development, and may have the odd rough edge here and there. Please be vocal over on the [Sapper issue tracker](https://github.com/sveltejs/sapper/issues).
