@@ -32,6 +32,9 @@ const securityMiddleware = (_, res, next) => {
     return next();
 };
 
+// port: WEBSOCKET_PORT
+const wss = new WebSocket.Server({ server });
+
 const app = polka({ server }) // You can also use Express
 	.use(
 		compression({ threshold: 0 }),
@@ -49,8 +52,6 @@ const app = polka({ server }) // You can also use Express
         console.log("Socket IO Voice socket listening on https://localhost:" + PORT + "/voice");
         console.log("User Audio Data socket listening on https://localhost:" + WEBSOCKET_PORT + "/");
     });
-
-const wss = new WebSocket.Server({ port: WEBSOCKET_PORT });
 
 const disconnectClient = (socket) => {
     console.log("Disconnecting client..");
