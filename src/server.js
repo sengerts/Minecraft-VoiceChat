@@ -11,7 +11,7 @@ const cors = require('cors');
 process.env.PORT = process.env.PORT || 3000;
 
 const { PORT, NODE_ENV } = process.env;
-const WEBSOCKET_PORT = 3001;
+const WEBSOCKET_PORT = 8080;
 const dev = NODE_ENV === 'development';
 
 let spigotWs;
