@@ -21,7 +21,6 @@ var playerTokens = new Map();
 
 var channels = {};
 var sockets = {};
-
 var playerSockets = {};
 var playerUUIDs = {};
 var playersConnected = new Set();
