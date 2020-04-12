@@ -26,6 +26,7 @@ var playerUUIDs = {};
 var playersConnected = new Set();
 
 const server = http.createServer();
+const webSocketServer = http.createServer();
 
 const securityMiddleware = (_, res, next) => {
     res.setHeader("Content-Security-Policy", "script-src 'self'");
@@ -33,7 +34,15 @@ const securityMiddleware = (_, res, next) => {
 };
 
 // port: WEBSOCKET_PORT
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ server: webSocketServer });
+webSocketServer.listen(WEBSOCKET_PORT, err => {
+    if (err) {
+        console.log('error', err);
+        return;
+    }
+      
+    console.log("User Audio Data socket listening on ws://localhost:" + WEBSOCKET_PORT + "/");
+});
 
 const app = polka({ server }) // You can also use Express
 	.use(
@@ -50,7 +59,6 @@ const app = polka({ server }) // You can also use Express
         }
           
         console.log("Socket IO Voice socket listening on https://localhost:" + PORT + "/voice");
-        console.log("User Audio Data socket listening on https://localhost:" + WEBSOCKET_PORT + "/");
     });
 
 const disconnectClient = (socket) => {
