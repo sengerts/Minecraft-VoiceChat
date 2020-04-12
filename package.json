@@ -14,7 +14,7 @@
   "dependencies": {
     "compression": "^1.7.1",
     "cors": "^2.8.5",
-    "polka": "latest",
+    "polka": "next",
     "sirv": "^0.4.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
