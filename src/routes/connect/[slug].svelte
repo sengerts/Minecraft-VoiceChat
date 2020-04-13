@@ -40,6 +40,7 @@
     var peer_media_elements = {};  /* keep track of our <video>/<audio> tags, indexed by peer_id */
     var volumeControlNode;
     var globalVolumeControlNodes = {};
+    var userVolumeControlNodes = {};
 
     let ownMicrophoneActivated = false;
     $: microphoneToggleText = "Mikrofon " + (ownMicrophoneActivated ? "aktiviert" : "deaktiviert");
@@ -129,9 +130,10 @@
                 }
 
                 console.log("Updating volume of peer ", volume.socketId, peer_media_elements[volume.socketId][0], volume.volume)
+                userVolumeGainNodes[volume.socketId].gain.value = volume.volume;
 
-                const player = peer_media_elements[volume.socketId][0];
-                jq(player).animate({volume: volume.volume}, 100);
+                //const player = peer_media_elements[volume.socketId][0];
+                //jq(player).animate({volume: volume.volume}, 100);
 
                 // Without animating:
 				//player.volume = volume.volume;
@@ -225,18 +227,26 @@
                 let audioCtx = new AudioContext();
 
                 let mediaSource = audioCtx.createMediaStreamSource(event.streams[0]);
-                let gainNode = audioCtx.createGain();
-                gainNode.gain.value = 1;
-                mediaSource.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
+                
+                let globalVolumeGainNode = audioCtx.createGain();
+                globalVolumeGainNode.gain.value = 1;
+                mediaSource.connect(globalVolumeGainNode);
+                //globalVolumeGainNode.connect(audioCtx.destination);
+
+                let userVolumeGainNode = audioCtx.createGain();
+                userVolumeGainNode.gain.value = 1;
+                globalVolumeGainNode.connect(userVolumeGainNode);
+                userVolumeGainNode.connect(audioCtx.destination);
 
                 let destinationNode = audioCtx.createMediaStreamDestination();
-                gainNode.connect(destinationNode);
+                globalVolumeGainNode.connect(destinationNode);
                 
                 player.srcObject = destinationNode.stream;
 
-                globalVolumeControlNodes[peer_id] = gainNode;
+                userVolumeControlNodes[peer_id] = userVolumeGainNode;
+                globalVolumeControlNodes[peer_id] = globalVolumeGainNode;
                 peer_media_elements[peer_id] = remote_media;
+
                 jq('#audioContainer').append(remote_media);
             }
 
