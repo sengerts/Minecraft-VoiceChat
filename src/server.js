@@ -167,6 +167,21 @@ const ioServer = io(server);
 
 ioServer.of("/voicedata").on('connection', function (socket) {
     console.log("Connected to voicedata socket!");
+
+    socket.on('token', function (message) {
+        const { token } = JSON.parse(message);
+        console.log("Received new token ", token);
+    });
+
+    socket.on('invalidateToken', function (message) {
+        const { invalidateToken } = JSON.parse(message);
+        console.log("Received new invalidate token ", invalidateToken);
+    });
+
+    socket.on('volumes', function (message) {
+        const { player, microphoneActivated, volumes } = JSON.parse(message);
+        console.log("Received new volumes data ", player, microphoneActivated, volumes);
+    });
 });
 
 /**
