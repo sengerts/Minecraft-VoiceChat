@@ -108,6 +108,8 @@
         });
 
 		signaling_socket.on('volumes', function({ microphoneActivated, volumes }) {
+            console.log("Receiving volumes ", microphoneActivated, volumes);
+
             if(microphoneActivated != ownMicrophoneActivated) {
                 ownMicrophoneActivated = microphoneActivated;
             }

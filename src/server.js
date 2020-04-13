@@ -126,6 +126,8 @@ ioServer.of("/voicedata").on('connection', function (socket) {
         const { player, microphoneActivated, volumes } = JSON.parse(message);
         let socketId = playerSockets[player];
 
+        console.log("Receiving volumes ", player, microphoneActivated, volumes);
+
         if(socketId in sockets) {
             const volumesWithSocketId = volumes.map((volume) => {
                 return {
@@ -134,6 +136,7 @@ ioServer.of("/voicedata").on('connection', function (socket) {
                     socketId: playerSockets[volume.player],
                 }
             }); 
+            console.log("  Emitting to volumes channel..");
             sockets[socketId].emit('volumes', { microphoneActivated, volumes: volumesWithSocketId });
         }
     });
