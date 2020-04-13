@@ -52,8 +52,8 @@ const disconnectClient = (socket) => {
     for (var channel in socket.channels) {
         partChannel(socket, channel);
     }
-    console.log("["+ socket.id + "] disconnected");
     const playerUUID = playerUUIDs[socket.id];
+    console.log("["+ socket.id + "] (player " + playerUUID + ") disconnected");
 
     delete sockets[socket.id];
     playersConnected.delete(playerUUID);
