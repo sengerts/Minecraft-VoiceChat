@@ -202,8 +202,6 @@ ioServer.of("/voice").on('connection', function (socket) {
         channels[channel][socket.id] = socket;
         socket.channels[channel] = channel;
 
-        console.log("Test join, ", spigotWs);
-
         if(spigotWs) {
             console.log("Emitting connected signal to MC server for player " + playerUUID + "..");
             spigotWs.emit("playerConnected", JSON.stringify({ playerUUID }));
