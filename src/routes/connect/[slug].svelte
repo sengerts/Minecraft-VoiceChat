@@ -128,6 +128,8 @@
 					continue;
                 }
 
+                console.log("Updating volume of peer ", volume.socketId, peer_media_elements[volume.socketId][0], volume.volume)
+
                 const player = peer_media_elements[volume.socketId][0];
                 jq(player).animate({volume: volume.volume}, 100);
 
