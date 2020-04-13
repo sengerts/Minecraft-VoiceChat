@@ -1,5 +1,6 @@
 <script>
     export let peers;
+    export let showPlayerNames = false;
 
     const getDistanceText = (volume) => {
         if(volume >= 0.8) {
@@ -52,7 +53,7 @@
     <ul>
         {#each peers as { playerId, playerName, volume, isConnectedToVoiceChat }, i}
             <li>
-                <p>{playerName}</p>
+                <p>{showPlayerNames ? playerName : "Spieler"}</p>
                 <span>{getDistanceText(volume)}</span>
             </li>
         {/each}
