@@ -40,7 +40,6 @@
     var peer_media_elements = {};  /* keep track of our <video>/<audio> tags, indexed by peer_id */
     var volumeControlNode;
     var globalVolumeControlNodes = {};
-    var userVolumeControlNodes = {};
 
     let ownMicrophoneActivated = false;
     $: microphoneToggleText = "Mikrofon " + (ownMicrophoneActivated ? "aktiviert" : "deaktiviert");
@@ -109,8 +108,6 @@
         });
 
 		signaling_socket.on('volumes', function({ microphoneActivated, volumes }) {
-            console.log("Receiving volumes ", microphoneActivated, volumes);
-
             if(microphoneActivated != ownMicrophoneActivated) {
                 ownMicrophoneActivated = microphoneActivated;
             }
@@ -128,10 +125,6 @@
 				if(!(volume.socketId in peer_media_elements)) {
 					continue;
                 }
-
-                console.log("Updating volume of peer ", volume.socketId, volume.volume)
-                
-                //userVolumeControlNodes[volume.socketId].gain.value = volume.volume;
 
                 const player = peer_media_elements[volume.socketId][0];
                 jq(player).animate({volume: volume.volume}, 100);
@@ -232,19 +225,14 @@
                 let globalVolumeGainNode = audioCtx.createGain();
                 globalVolumeGainNode.gain.value = 1;
                 mediaSource.connect(globalVolumeGainNode);
-                //globalVolumeGainNode.connect(audioCtx.destination);
-
-                /*let userVolumeGainNode = audioCtx.createGain();
-                userVolumeGainNode.gain.value = 1;
-                globalVolumeGainNode.connect(userVolumeGainNode);
-                userVolumeGainNode.connect(audioCtx.destination);*/
+                // This is for outputting the audio over speakers directly:
+                // globalVolumeGainNode.connect(audioCtx.destination);
 
                 let destinationNode = audioCtx.createMediaStreamDestination();
                 globalVolumeGainNode.connect(destinationNode);
                 
                 player.srcObject = destinationNode.stream;
 
-                //userVolumeControlNodes[peer_id] = userVolumeGainNode;
                 globalVolumeControlNodes[peer_id] = globalVolumeGainNode;
                 peer_media_elements[peer_id] = remote_media;
 
