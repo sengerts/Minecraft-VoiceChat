@@ -129,11 +129,12 @@
 					continue;
                 }
 
-                console.log("Updating volume of peer ", volume.socketId, peer_media_elements[volume.socketId][0], volume.volume)
-                userVolumeControlNodes[volume.socketId].gain.value = volume.volume;
+                console.log("Updating volume of peer ", volume.socketId, volume.volume)
+                
+                //userVolumeControlNodes[volume.socketId].gain.value = volume.volume;
 
-                //const player = peer_media_elements[volume.socketId][0];
-                //jq(player).animate({volume: volume.volume}, 100);
+                const player = peer_media_elements[volume.socketId][0];
+                jq(player).animate({volume: volume.volume}, 100);
 
                 // Without animating:
 				//player.volume = volume.volume;
@@ -233,17 +234,17 @@
                 mediaSource.connect(globalVolumeGainNode);
                 //globalVolumeGainNode.connect(audioCtx.destination);
 
-                let userVolumeGainNode = audioCtx.createGain();
+                /*let userVolumeGainNode = audioCtx.createGain();
                 userVolumeGainNode.gain.value = 1;
                 globalVolumeGainNode.connect(userVolumeGainNode);
-                userVolumeGainNode.connect(audioCtx.destination);
+                userVolumeGainNode.connect(audioCtx.destination);*/
 
                 let destinationNode = audioCtx.createMediaStreamDestination();
                 globalVolumeGainNode.connect(destinationNode);
                 
                 player.srcObject = destinationNode.stream;
 
-                userVolumeControlNodes[peer_id] = userVolumeGainNode;
+                //userVolumeControlNodes[peer_id] = userVolumeGainNode;
                 globalVolumeControlNodes[peer_id] = globalVolumeGainNode;
                 peer_media_elements[peer_id] = remote_media;
 
