@@ -204,7 +204,7 @@ ioServer.of("/voice").on('connection', function (socket) {
 
         if(spigotWs) {
             console.log("Emitting connected signal to MC server for player " + playerUUID + "..");
-            spigotWs.emit("playerConnected", JSON.stringify({ playerUUID }));
+            spigotWs.emit("playerConnected", { playerUUID });
         }
     });
 
