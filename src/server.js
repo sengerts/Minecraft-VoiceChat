@@ -85,7 +85,7 @@ const partChannel = (socket, channel) => {
 const ioServer = io(server);
 
 ioServer.of("/voicedata").on('connection', function (socket) {
-    console.log("Connected to voicedata socket!");
+    console.log("Connected with Minecraft server!");
     spigotWs = socket;
 
     socket.on('token', function (message) {
@@ -201,6 +201,8 @@ ioServer.of("/voice").on('connection', function (socket) {
 
         channels[channel][socket.id] = socket;
         socket.channels[channel] = channel;
+
+        console.log("Test join, ", spigotWs);
 
         if(spigotWs) {
             console.log("Emitting connected signal to MC server for player " + playerUUID + "..");
