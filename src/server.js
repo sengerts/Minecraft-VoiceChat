@@ -5,13 +5,11 @@ import io from 'socket.io';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 
-const WebSocket = require('ws');
 const cors = require('cors');
 
 process.env.PORT = process.env.PORT || 3000;
 
 const { PORT, NODE_ENV } = process.env;
-const WEBSOCKET_PORT = 8080;
 const dev = NODE_ENV === 'development';
 
 let spigotWs;
@@ -26,24 +24,11 @@ var playerUUIDs = {};
 var playersConnected = new Set();
 
 const server = http.createServer();
-const webSocketServer = http.createServer();
 
 const securityMiddleware = (_, res, next) => {
     res.setHeader("Content-Security-Policy", "script-src 'self'");
     return next();
 };
-
-// port: WEBSOCKET_PORT
-/*const wss = new WebSocket.Server({ server: webSocketServer });
-webSocketServer.listen(WEBSOCKET_PORT, err => {
-    if (err) {
-        console.log('error', err);
-        return;
-    }
-      
-    console.log("User Audio Data socket listening on ws://localhost:" + WEBSOCKET_PORT + "/");
-});*/
-const wss = new WebSocket.Server({ ip: 'localhost', port: 8080 });
 
 const app = polka({ server }) // You can also use Express
 	.use(
@@ -76,7 +61,7 @@ const disconnectClient = (socket) => {
     delete playerSockets[playerUUID];
 
     if(spigotWs) {
-        spigotWs.send(JSON.stringify({ event: 'DISCONNECT' , playerUUID }));
+        spigotWs.emit("playerDisconnected", { playerUUID });
     }
 };
 
@@ -97,56 +82,48 @@ const partChannel = (socket, channel) => {
     }
 };
 
-wss.on('connection', function connection(ws, req) {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    console.log(ip);
-    
-    //if ip does not match : return ws.terminate();
+const ioServer = io(server);
 
-    console.log('connected to client');
-    spigotWs = ws;
+ioServer.of("/voicedata").on('connection', function (socket) {
+    console.log("Connected to voicedata socket!");
+    spigotWs = socket;
 
-    ws.on('message', function incoming(message) {
-        const messageJson = JSON.parse(message);
+    socket.on('token', function (message) {
+        const { player, playerName, token } = JSON.parse(message);
+        console.log("Received new token ", token + " for player " + playerName + " (id: " + player + ")");
+        playerNames.set(player, playerName);
+        playerTokens.set(token, player);
+    });
 
-        if(messageJson.token) {
-            const { player, playerName, token } = messageJson;
-            console.log("Received token: " + token + " for player " + playerName + " with UUID " + player + "!");
-
-            playerNames.set(player, playerName);
-            playerTokens.set(token, player);
+    socket.on('invalidateToken', function (message) {
+        const { invalidateToken } = JSON.parse(message);
+        console.log("Received new invalidate token request for ", invalidateToken);
+        
+        if(!invalidateToken || !invalidateToken in playerTokens) {
             return;
         }
 
-        if(messageJson.invalidateToken) {
-            const { invalidateToken } = messageJson;
-            console.log("Received invalidate token: " + invalidateToken + "!");
-
-            if(!invalidateToken || !invalidateToken in playerTokens) {
-                return;
-            }
-
-            const playerUUID = playerTokens.get(invalidateToken);
-            if(!playerUUID || !playerUUID in playerSockets) {
-                return;
-            }
-
-            playerTokens.delete(invalidateToken);
-            
-            const socketId = playerSockets[playerUUID];
-            if(!socketId || !socketId in sockets) {
-                return;
-            }
-
-            console.log("Closing socket connection..");
-
-            const socket = sockets[socketId];
-            disconnectClient(socket);
-            socket.emit('invalidToken');
+        const playerUUID = playerTokens.get(invalidateToken);
+        if(!playerUUID || !playerUUID in playerSockets) {
             return;
         }
 
-        const { player, microphoneActivated, volumes } = messageJson;
+        playerTokens.delete(invalidateToken);
+        
+        const socketId = playerSockets[playerUUID];
+        if(!socketId || !socketId in sockets) {
+            return;
+        }
+
+        console.log("Closing socket connection..");
+
+        const socket = sockets[socketId];
+        disconnectClient(socket);
+        socket.emit('invalidToken');
+    });
+
+    socket.on('volumes', function (message) {
+        const { player, microphoneActivated, volumes } = JSON.parse(message);
         let socketId = playerSockets[player];
 
         if(socketId in sockets) {
@@ -159,28 +136,6 @@ wss.on('connection', function connection(ws, req) {
             }); 
             sockets[socketId].emit('volumes', { microphoneActivated, volumes: volumesWithSocketId });
         }
-        //console.log('received: %s', message);
-    });
-});
-
-const ioServer = io(server);
-
-ioServer.of("/voicedata").on('connection', function (socket) {
-    console.log("Connected to voicedata socket!");
-
-    socket.on('token', function (message) {
-        const { token } = JSON.parse(message);
-        console.log("Received new token ", token);
-    });
-
-    socket.on('invalidateToken', function (message) {
-        const { invalidateToken } = JSON.parse(message);
-        console.log("Received new invalidate token ", invalidateToken);
-    });
-
-    socket.on('volumes', function (message) {
-        const { player, microphoneActivated, volumes } = JSON.parse(message);
-        console.log("Received new volumes data ", player, microphoneActivated, volumes);
     });
 });
 
@@ -249,7 +204,7 @@ ioServer.of("/voice").on('connection', function (socket) {
 
         if(spigotWs) {
             console.log("Emitting connected signal to MC server for player " + playerUUID + "..");
-            spigotWs.send(JSON.stringify({ event: 'CONNECT' , playerUUID }));
+            spigotWs.emit("playerConnected", JSON.stringify({ playerUUID }));
         }
     });
 
