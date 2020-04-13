@@ -60,7 +60,7 @@ const disconnectClient = (socket) => {
     delete playerUUIDs[socket.id];
     delete playerSockets[playerUUID];
 
-    if(spigotWs) {
+    if(spigotWs && playerUUID) {
         spigotWs.emit("playerDisconnected", { playerUUID });
     }
 };
