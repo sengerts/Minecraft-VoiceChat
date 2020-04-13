@@ -11,7 +11,7 @@ const cors = require('cors');
 process.env.PORT = process.env.PORT || 3000;
 
 const { PORT, NODE_ENV } = process.env;
-const WEBSOCKET_PORT = 4000;
+const WEBSOCKET_PORT = 8080;
 const dev = NODE_ENV === 'development';
 
 let spigotWs;
@@ -34,7 +34,7 @@ const securityMiddleware = (_, res, next) => {
 };
 
 // port: WEBSOCKET_PORT
-const wss = new WebSocket.Server({ server: webSocketServer });
+/*const wss = new WebSocket.Server({ server: webSocketServer });
 webSocketServer.listen(WEBSOCKET_PORT, err => {
     if (err) {
         console.log('error', err);
@@ -42,7 +42,8 @@ webSocketServer.listen(WEBSOCKET_PORT, err => {
     }
       
     console.log("User Audio Data socket listening on ws://localhost:" + WEBSOCKET_PORT + "/");
-});
+});*/
+const wss = new WebSocket.Server({ ip: 'localhost', port: 8080 });
 
 const app = polka({ server }) // You can also use Express
 	.use(
@@ -162,6 +163,12 @@ wss.on('connection', function connection(ws, req) {
     });
 });
 
+const ioServer = io(server);
+
+ioServer.of("/voicedata").on('connection', function (socket) {
+    console.log("Connected to voicedata socket!");
+});
+
 /**
  * Users will connect to the signaling server, after which they'll issue a "join"
  * to join a particular channel. The signaling server keeps track of all sockets
@@ -172,7 +179,7 @@ wss.on('connection', function connection(ws, req) {
  * information. After all of that happens, they'll finally be able to complete
  * the peer connection and will be streaming audio/video between eachother.
  */
-io(server).of("/voice").on('connection', function (socket) {
+ioServer.of("/voice").on('connection', function (socket) {
     socket.channels = {};
     sockets[socket.id] = socket;
 

@@ -22,7 +22,7 @@
     var jq = null; // will be set to jquery instance in onMount
 
     /** CONFIG **/
-    var SIGNALING_SERVER = "/voice";
+    var SIGNALING_SERVER = "http://localhost:3000/voice";
     var USE_AUDIO = true;
     var USE_VIDEO = false;
     var DEFAULT_CHANNEL = 'voice-channel';
