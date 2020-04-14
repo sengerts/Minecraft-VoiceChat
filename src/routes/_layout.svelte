@@ -29,11 +29,15 @@
 		min-height: 100vh;
 		height: 100%;
 		background-image: linear-gradient(120deg, #8ba5d252 0%, #30446957 50%, #0c131f66 100%);
+		z-index: -1;
 	}
 
 	.credits {
+		margin-top: 10rem;
+	}
+
+	.credits, .legal {
 		text-align: center;
-    	margin-top: 10rem;
 		color: #0e131c;
 	}
 </style>
@@ -44,3 +48,5 @@
 	<slot></slot>
 </main>
 <p class="credits">Entwickelt von <a href="https://github.com/sengerts/">Tobias Senger</a></p>
+<p class="legal"><a href="/impress">Impressum</a></p>
+<p class="legal"><a href="/privacy">Datenschutzerklärung</a></p>

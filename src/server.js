@@ -25,10 +25,10 @@ var playersConnected = new Set();
 
 const server = http.createServer();
 
-const securityMiddleware = (_, res, next) => {
+/*const securityMiddleware = (_, res, next) => {
     res.setHeader("Content-Security-Policy", "script-src 'self'");
     return next();
-};
+};*/
 
 const app = polka({ server }) // You can also use Express
 	.use(
@@ -44,7 +44,8 @@ const app = polka({ server }) // You can also use Express
             return;
         }
           
-        console.log("Socket IO Voice socket listening on https://localhost:" + PORT + "/voice");
+        console.log("Socket IO Voice socket listening on https://*:" + PORT + "/voice");
+        console.log("Socket IO User Voice Data socket listening on https://*:" + PORT + "/voicedata");
     });
 
 const disconnectClient = (socket) => {
