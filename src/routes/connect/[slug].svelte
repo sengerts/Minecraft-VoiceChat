@@ -235,7 +235,7 @@
                 player.srcObject = destinationNode.stream;*/
                 player.srcObject = event.streams[0];
 
-                globalVolumeControlNodes[peer_id] = globalVolumeGainNode;
+                //globalVolumeControlNodes[peer_id] = globalVolumeGainNode;
                 peer_media_elements[peer_id] = remote_media;
 
                 jq('#audioContainer').append(remote_media);
