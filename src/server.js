@@ -7,7 +7,7 @@ import * as sapper from '@sapper/server';
 
 const cors = require('cors');
 
-const wakeUpDyno = require("./wokeDyno.js");
+//const wakeUpDyno = require("./wokeDyno.js");
 const DYNO_URL = "https://safe-springs-63253.herokuapp.com";
 
 process.env.PORT = process.env.PORT || 3000;
@@ -47,7 +47,7 @@ const app = polka({ server }) // You can also use Express
             return;
         }
 
-        wakeUpDyno(DYNO_URL);
+        //wakeUpDyno(DYNO_URL);
           
         console.log("Socket IO Voice socket listening on https://*:" + PORT + "/voice");
         console.log("Socket IO User Voice Data socket listening on https://*:" + PORT + "/voicedata");
