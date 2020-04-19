@@ -12,14 +12,14 @@ const getLocalUserMedia = (useAudio, useVideo, jq) => {
             var audioContext = new (AudioContext || webkitAudioContext);
         
             // create a gain node (to change audio volume)
-            let volumeControlNode = audioContext.createGain();
+            //let volumeControlNode = audioContext.createGain();
             // default is 1 (no change); less than 1 means audio is attenuated and vice versa
-            volumeControlNode.gain.value = 1;
-
-            var peer = audioContext.createMediaStreamDestination();
-            var microphone = audioContext.createMediaStreamSource(stream);
-            microphone.connect(volumeControlNode);
-            volumeControlNode.connect(peer);
+            //volumeControlNode.gain.value = 1;
+            //
+            //var peer = audioContext.createMediaStreamDestination();
+            //var microphone = audioContext.createMediaStreamSource(stream);
+            //microphone.connect(volumeControlNode);
+            //volumeControlNode.connect(peer);
 
             let localMediaStream = peer.stream;
 
@@ -34,7 +34,7 @@ const getLocalUserMedia = (useAudio, useVideo, jq) => {
             jq('#audioContainer').append(local_media);
 
             resolve({
-                volumeControlNode,
+                volumeControlNode: undefined, // TODO 
                 localMediaStream
             });
         }).catch(err => {

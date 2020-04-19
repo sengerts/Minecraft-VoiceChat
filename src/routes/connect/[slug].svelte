@@ -200,11 +200,12 @@
 
                 // Chrome forces us to attach the original audio stream to a video/ audio element, otherwise
                 // the stream with gain node below will not work
-                var raw_audio_media = USE_VIDEO ? jq("<video>") : jq("<audio>");
+                
+                /*var raw_audio_media = USE_VIDEO ? jq("<video>") : jq("<audio>");
                 var fakePlayer = raw_audio_media[0];
                 fakePlayer.srcObject = event.streams[0];
                 fakePlayer.autoplay = true;
-                fakePlayer.muted = true;
+                fakePlayer.muted = true;*/
 
                 // This is the real video/ audio element with gain node attached
                 var remote_media = USE_VIDEO ? jq("<video>") : jq("<audio>");
@@ -220,7 +221,7 @@
                 var AudioContext = window.AudioContext || window.webkitAudioContext;
                 let audioCtx = new AudioContext();
 
-                let mediaSource = audioCtx.createMediaStreamSource(event.streams[0]);
+                /*let mediaSource = audioCtx.createMediaStreamSource(event.streams[0]);
                 
                 let globalVolumeGainNode = audioCtx.createGain();
                 globalVolumeGainNode.gain.value = 1;
@@ -231,7 +232,8 @@
                 let destinationNode = audioCtx.createMediaStreamDestination();
                 globalVolumeGainNode.connect(destinationNode);
                 
-                player.srcObject = destinationNode.stream;
+                player.srcObject = destinationNode.stream;*/
+                player.srcObject = event.streams[0];
 
                 globalVolumeControlNodes[peer_id] = globalVolumeGainNode;
                 peer_media_elements[peer_id] = remote_media;
