@@ -463,11 +463,12 @@
         -->
     </div>
 
-    <VolumeControlRange text={"Allgemeine Wiedergabe-Lautstärke:"} handleVolumeChange={(event) =>  {
+    <!--<VolumeControlRange text={"Allgemeine Wiedergabe-Lautstärke:"} handleVolumeChange={(event) =>  {
         for(let peer_id in globalVolumeControlNodes) {
             globalVolumeControlNodes[peer_id].gain.value = event.target.value;
         }
     }}/>
     <VolumeControlRange text={"Deine Mikrofon-Lautstärke:"} handleVolumeChange={(event) =>  volumeControlNode.gain.value = event.target.value}/>
+    -->
     <PeersTalkingToContainer peers={peersData.filter(v => v.isConnectedToVoiceChat && v.volume > 0)}/>
 {/if}
