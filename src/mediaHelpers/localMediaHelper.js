@@ -21,7 +21,8 @@ const getLocalUserMedia = (useAudio, useVideo, jq) => {
             //microphone.connect(volumeControlNode);
             //volumeControlNode.connect(peer);
 
-            let localMediaStream = peer.stream;
+            //let localMediaStream = peer.stream;
+            let localMediaStream = stream;
 
             var local_media = useVideo ? jq("<video>") : jq("<audio>");
             
@@ -29,8 +30,9 @@ const getLocalUserMedia = (useAudio, useVideo, jq) => {
             player.autoplay = true;
             player.muted = true; /* always mute ourselves by default */
             player.controls = true; /* results in own player not being shown for audio */
-            player.srcObject = peer.stream;
-            
+            //player.srcObject = peer.stream;
+            player.srcObject = localMediaStream;
+
             jq('#audioContainer').append(local_media);
 
             resolve({
