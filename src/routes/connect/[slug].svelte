@@ -216,6 +216,7 @@
                     player.muted = true;
                 }
                 player.controls = true;
+                player.volume = 0;
 
                 // TODO Test if Google Chrome is making difficulties for more than six AudioContext instances per Tab
                 var AudioContext = window.AudioContext || window.webkitAudioContext;
