@@ -31,7 +31,7 @@
     /** You should probably use a different stun server doing commercial stuff **/
     /** Also see: https://gist.github.com/zziuni/3741933 **/
     var ICE_SERVERS = [
-        { url: "stun:stun.l.google.com:19302" }
+        { urls: "stun:stun.l.google.com:19302" }
     ];
 
     var signaling_socket = null;   /* our socket.io connection to our webserver */
@@ -471,5 +471,8 @@
     }}/>
     <VolumeControlRange text={"Deine Mikrofon-Lautstärke:"} handleVolumeChange={(event) =>  volumeControlNode.gain.value = event.target.value}/>
     -->
-    <PeersTalkingToContainer peers={peersData.filter(v => v.isConnectedToVoiceChat && v.volume > 0)}/>
+    <PeersTalkingToContainer 
+        peers={peersData.filter(v => v.isConnectedToVoiceChat && v.volume > 0)}
+        showPlayerNames={true}
+    />
 {/if}
