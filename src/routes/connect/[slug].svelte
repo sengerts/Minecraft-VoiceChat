@@ -31,7 +31,11 @@
     /** You should probably use a different stun server doing commercial stuff **/
     /** Also see: https://gist.github.com/zziuni/3741933 **/
     var ICE_SERVERS = [
-        { urls: "stun:stun.l.google.com:19302" }
+        {
+            urls: "turn:45.81.233.22:5349?transport=tcp",
+            username: "HIDDEN",
+            credential: "HIDDEN",
+        },
     ];
 
     var signaling_socket = null;   /* our socket.io connection to our webserver */
@@ -473,6 +477,6 @@
     -->
     <PeersTalkingToContainer 
         peers={peersData.filter(v => v.isConnectedToVoiceChat && v.volume > 0)}
-        showPlayerNames={true}
+        showPlayerNames={false}
     />
 {/if}
